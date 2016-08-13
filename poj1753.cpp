@@ -10,6 +10,7 @@ using namespace std;
 */
 const unsigned long int MAX_STATE = 0b1111111111111111;
 unsigned char state[MAX_STATE] = {0};
+unsigned char step[MAX_STATE] = {0};
 unsigned long int BIT_OPR[16] = {0};
 bool isBlack(unsigned long int state, unsigned char bit_flag)
 {
@@ -50,11 +51,12 @@ int bit_search(unsigned long int init){
 		state_queue[ind % MAX_STATE] = init;
 		ind++;
 	}
+//	long int step = 0;
 	while ((ind % MAX_STATE) != (tail % MAX_STATE) ) {
 		now = state_queue[tail % MAX_STATE];
 		state[now] = 1; //record the state
 		if (now == 0 || now == 65535){
-			ans = ind;
+			ans = step[now];
 			break;
 		}
 		tail++;
@@ -78,10 +80,12 @@ int bit_search(unsigned long int init){
 				new_state = changeState(new_state, (i / 4 - 1) * 4 + i % 4 );
 			if ( (((i / 4) + 1 * 4) + i % 4) < 16) //down
 				new_state = changeState(new_state, (i / 4 + 1 ) * 4 + i % 4);
+//			printf("Iter %d: Current state %lu, new state %lu, ind %d, tail %d\n", i, now, new_state, ind, tail);
 			if (state[new_state] != 1) //never expanded before
 			{
+				step[new_state] = step[now] + 1;
 				state_queue[ind % MAX_STATE] = new_state;
-				ind = ind++;
+				ind++;
 			}
 		}
 	}
@@ -91,6 +95,7 @@ int main(){
 //init bit opr
 	for(int i = 0; i < 16; i++){
 		BIT_OPR[i] = 1 << (15 - i);
+//		printf("Ind:%d, BIT_OPR%lu\n",i,BIT_OPR[i]);
 	}
 //	printf("%d". MAX_STATE);
 	char current_state_input[4] = {0};
