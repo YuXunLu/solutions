@@ -11,6 +11,30 @@ using namespace std;
 const unsigned long int MAX_STATE = 0b1111111111111111;
 unsigned char state[MAX_STATE] = {0};
 const unsigned long int BIT_OPR[16] = {0};
+bool isBlack(unsigned long int state, unsigned char bit_flag)
+{
+	bool res = false;
+	if (state & BIT_OPR[bit_flag] == 1) //black
+		res = true
+	else //white
+		res = false;
+	return res;	
+}
+unsigned long int changeState(unsigned long int state, unsigned char bit_flag)
+{
+	unsigned long int res = state;
+	if (isBlack(state, bit_flag) )
+	{
+		//change to white
+		res = res ^ BIT_OPR[bit_flag];
+	}
+	else
+	{
+		//change to black
+		res = res | BIT_OPR[bit_flag];
+	}
+	return res;
+}
 int bit_search(unsigned long int init){
 //black is 1 and white is 0.
 	long int ans = -1;
@@ -26,13 +50,17 @@ int bit_search(unsigned long int init){
 		state_queue[ind % MAX_STATE] = init;
 		ind++;
 	}
-	now = state_queue[tail % MAX_STATE];
-	while ( now != 0 && now != 65535 && ( (ind % MAX_STATE) <> (tail % MAX_STATE) ) ){
+	while ((ind % MAX_STATE) != (tail % MAX_STATE) ) {
+		now = state_queue[tail % MAX_STATE];
+		state[now] = 1; //record the state
+		if (now == 0 || now == 65535){
+			ans = ind;
+			break;
+		}
+		tail++;
 		for(int i = 0; i < 16; i++)	{
 			unsigned long int new_state = 0;
 			//state expands for 16 different points.
-			if ( now & BIT_OPR[i] != 0 ){
-				//current point is black
 				/* condition 1: 0 <= i < 4 -> Line 1
 				   condition 2: 4 <= i < 8 -> Line 2
 				   condition 3: 8 <= i < 12 -> Line 3
@@ -41,22 +69,21 @@ int bit_search(unsigned long int init){
 				   i = 4, 8  > left side
 				   i = 7, 11 > right side
 				*/
+			//boundary judgement
 
+			if (state[new_state] != 1) //never expanded before
+			{
+				state_queue[ind % MAX_STATE] = new_state;
+				ind = ind++;
 			}
-			else{
-				//current point is white
-			}
-			state_queue[ind] = new_state;
-			ind = ind++;
 		}
-
 	}
 	return ans;
 }
 int main(){
 //init bit opr
 	for(int i = 0; i < 16; i++){
-		BIT_OPR[i] = 1 << i;
+		BIT_OPR[i] = 1 << (15 - i);
 	}
 //	printf("%d". MAX_STATE);
 	char current_state_input[4] = {0};
