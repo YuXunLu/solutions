@@ -10,12 +10,12 @@ using namespace std;
 */
 const unsigned long int MAX_STATE = 0b1111111111111111;
 unsigned char state[MAX_STATE] = {0};
-const unsigned long int BIT_OPR[16] = {0};
+unsigned long int BIT_OPR[16] = {0};
 bool isBlack(unsigned long int state, unsigned char bit_flag)
 {
 	bool res = false;
 	if (state & BIT_OPR[bit_flag] == 1) //black
-		res = true
+		res = true;
 	else //white
 		res = false;
 	return res;	
@@ -69,8 +69,11 @@ int bit_search(unsigned long int init){
 				   i = 4, 8  > left side
 				   i = 7, 11 > right side
 				*/
-			//boundary judgement
-
+			new_state = changeState(now, i);
+			if ( i - 1 >= (i / 4) * 4 )
+				new_state = changeState(new_state, i - 1);
+			if ( i + 1 <= (i / 4 + 1) * 4)
+				new_state = changeState(new_state, i + 1);
 			if (state[new_state] != 1) //never expanded before
 			{
 				state_queue[ind % MAX_STATE] = new_state;
