@@ -16,23 +16,31 @@ int bit_search(unsigned long int init){
 	long int ans = -1;
 	unsigned long int now = init;
 	unsigned long int state_queue[MAX_STATE] = {0};
-	unsigned int ind = 0;
+	unsigned int ind = 0, tail = 0;
 	state[init] = 1;
 	if ( now == 0 || now == 65535 ){
 		ans = 0;
 		return ans;
 	}
 	else{
-		state_queue[ind] = init;
+		state_queue[ind % MAX_STATE] = init;
 		ind++;
 	}
-	now = state_queue[ind - 1];
-	while ( now != 0 && now != 65535){
+	now = state_queue[tail % MAX_STATE];
+	while ( now != 0 && now != 65535 && ( (ind % MAX_STATE) <> (tail % MAX_STATE) ) ){
 		for(int i = 0; i < 16; i++)	{
 			unsigned long int new_state = 0;
 			//state expands for 16 different points.
 			if ( now & BIT_OPR[i] != 0 ){
 				//current point is black
+				/* condition 1: 0 <= i < 4 -> Line 1
+				   condition 2: 4 <= i < 8 -> Line 2
+				   condition 3: 8 <= i < 12 -> Line 3
+				   condition 4: 12 <= i < 16 -> Line 4
+				   i = 0, 3, 12, 15 > corner
+				   i = 4, 8  > left side
+				   i = 7, 11 > right side
+				*/
 
 			}
 			else{
