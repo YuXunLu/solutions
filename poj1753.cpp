@@ -70,10 +70,14 @@ int bit_search(unsigned long int init){
 				   i = 7, 11 > right side
 				*/
 			new_state = changeState(now, i);
-			if ( i - 1 >= (i / 4) * 4 )
+			if ( i - 1 > (i / 4) * 4 )	//left
 				new_state = changeState(new_state, i - 1);
-			if ( i + 1 <= (i / 4 + 1) * 4)
+			if ( i + 1 <= (i / 4 + 1) * 4) //right
 				new_state = changeState(new_state, i + 1);
+			if ( (((i / 4) - 1 * 4) + i % 4) > 0) // up
+				new_state = changeState(new_state, (i / 4 - 1) * 4 + i % 4 );
+			if ( (((i / 4) + 1 * 4) + i % 4) < 16) //down
+				new_state = changeState(new_state, (i / 4 + 1 ) * 4 + i % 4);
 			if (state[new_state] != 1) //never expanded before
 			{
 				state_queue[ind % MAX_STATE] = new_state;
