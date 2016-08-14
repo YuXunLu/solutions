@@ -15,7 +15,7 @@ unsigned long int BIT_OPR[16] = {0};
 bool isBlack(unsigned long int state, unsigned char bit_flag)
 {
 	bool res = false;
-	if (state & BIT_OPR[bit_flag] == 1) //black
+	if ( (state & BIT_OPR[bit_flag]) == BIT_OPR[bit_flag]) //black
 		res = true;
 	else //white
 		res = false;
@@ -25,13 +25,9 @@ unsigned long int changeState(unsigned long int state, unsigned char bit_flag)
 {
 	unsigned long int res = state;
 	if (isBlack(state, bit_flag) )
-	{
 		res = res ^ BIT_OPR[bit_flag];
-	}
 	else
-	{
 		res = res | BIT_OPR[bit_flag];
-	}
 	return res;
 }
 int bit_search(unsigned long int init){
@@ -42,14 +38,15 @@ int bit_search(unsigned long int init){
 	unsigned int ind = 0, tail = 0;
 
 	state_queue[ind % MAX_STATE] = init;
+	step[init] = 0;
 	state[init] = 1;
 	ind++;
 	while ((ind % MAX_STATE) != (tail % MAX_STATE) ) {
 		now = state_queue[tail % MAX_STATE];
-		if (now == 0 || now == 65535){
-//			printf("Found %lu, at step %d\n", now, step[now]);
+		if (now == 0 || now == 65535)
+		{
 			ans = step[now];
-			return ans + 1;
+			break;
 		}
 		tail++;
 		for(int i = 0; i < 16; i++)	{
@@ -64,13 +61,13 @@ int bit_search(unsigned long int init){
 			{
 				new_state = changeState(new_state, i + 1);
 			}
-			if ( ((((i / 4) - 1) * 4) + i % 4) >= 0) // up
+			if ( ( i - 4 ) >= 0) // up
 			{
-				new_state = changeState(new_state, (i / 4 - 1) * 4 + i % 4 );
+				new_state = changeState(new_state, i - 4);
 			}
-			if ( ((((i / 4) + 1 ) * 4) + i % 4) < 16) //down
+			if ( ( i + 4 ) < 16) //down
 			{
-				new_state = changeState(new_state, (i / 4 + 1 ) * 4 + i % 4);
+				new_state = changeState(new_state, i + 4);
 			}
 			if (state[new_state] != 1) //never expanded before
 			{
