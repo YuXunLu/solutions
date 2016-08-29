@@ -22,6 +22,11 @@ int main()
 			}
 		}
 	}
+	if ( n == 1 )
+	{
+		printf("5\n");
+		return 0;
+	}
 	long long int r_s = 0, c_s = 0;
 	for(int i = 0; i < n; i++)
 	{
@@ -39,20 +44,22 @@ int main()
 		long long int ans = 0;
 		if ( s_i == 0 )
 		{
-			int t_i = s_i + 1;
+			int t_i = 1;
 			for (int i = 0; i < n; i++)
-			{
 				tmp_res = tmp_res + mat[t_i][i];
-			}
 		}
 		else
 		{
-			int t_i = s_i - 1;
+			int t_i = 0;
 			for (int i = 0; i < n; i++)
 				tmp_res = tmp_res + mat[t_i][i];
 		}
 		ans = tmp_res - r_s;
-//		printf("Tmp ans got: %lld\n", ans);
+		if ( ans == 0 )
+		{
+			printf("-1\n");
+			return 0;
+		}
 		mat[s_i][s_j] = ans;
 		//legality checking.
 		bool legal = true;
@@ -62,28 +69,33 @@ int main()
 			d1 = d1 + mat[i][i];
 			d2 = d2 + mat[i][n - 1 - i];
 		}
-		if ( d1 != d2 )
+		if ( (d1 != d2) || (d1 != tmp_res) )
 		{
-//			printf("Diagonal line check error\n");
 			printf("-1\n");
 			return 0;
 		}
 		for (int i = 0; i < n; i++)
 		{
-			long long int cs = 0, rs = 0;
+			long long int cs = 0;
 			for(int j = 0; j < n; j++)
-			{
 				cs = cs + mat[i][j];
-				rs = rs + mat[j][i];
-			}
-			if ( ( cs != rs) || (cs != tmp_res))
+			if ( (cs != tmp_res) )
 			{
-//				printf("Legality on tmp_res check error: cs!=rs %d cs!=tmp_res %d\n", (cs != rs), (cs != tmp_res) );
 				printf("-1\n");
 				return 0;
 			}
 		}
-//		printf("%lld\n", ans);
+		for (int i = 0; i < n; i++)
+		{
+			long long int rs = 0;
+			for(int j = 0; j < n; j++)
+				rs = rs + mat[j][i];
+			if ( (rs != tmp_res ) )
+			{
+				printf("-1\n");
+				return 0;
+			}
+		}
 		cout << ans << endl;
 	}
 	return 0;
