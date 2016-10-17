@@ -1,0 +1,84 @@
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
+#include <cmath>
+#include <iostream>
+#define DEBUG_94XU 1
+using namespace std;
+unsigned long long int min_three_num(unsigned long long int a, unsigned long long int b, unsigned long long int c)
+{
+    if ( a <= b )
+        if ( a <= c )
+            return a;
+        else
+            if ( b <= c )
+                return b;
+            else
+                return c;
+    else
+        if ( b <= c )
+            return b;
+        else
+            return c;
+}
+int main()
+{
+    unsigned long long int b = 0, d = 0, s = 0;
+    cin >> b >> d >> s;
+#ifdef DEBUG_94XU
+    cout << "b is :" << b << " d is : " << d << " s is :" << s << endl;
+#endif
+    unsigned long long int res = 0, p = 0;
+    p = min_three_num(b,d,s); 
+    unsigned long long int b1 = 0, d1 = 0, s1 = 0, b2 = 0, d2 = 0, s2 = 0;
+    b1 = b - p;
+    d1 = d - p;
+    s1 = s - p;
+    unsigned long long int q = 0;
+    unsigned long long int t = 0;
+    if ( b1 == 0 )
+    {
+        //s and d
+        q = min(s1,d1);
+#ifdef DEBUG_94XU
+        cout << "The minimal number is " << q << endl;
+#endif
+        res = q - 1;
+#ifdef DEBUG_94XU
+        cout << "After first step, result is " << res << endl;
+#endif
+        t = ( abs(s1 - d1) - 1 );
+#ifdef DEBUG_94XU
+        cout << "t is " << t;
+#endif
+        if ( t >= 0 )
+            res = res + t * 2 + 1;
+#ifdef DEBUG_94XU
+        cout << "Final result is " << res << endl;
+#endif
+    }
+    else
+    {
+        if ( d1 == 0 )
+        {
+            cout << "guest" << endl;
+            q = min(s1,b1);
+            cout << "q:" << q << endl;
+            res = q - 1;
+            t =  (abs(s1 - b1) - 1 );
+            cout << "t:" << t << endl;
+            if ( t >= 0 )
+                res = res + t * 2 + 1;
+        }
+        else
+        {
+            q = min(b1,d1);
+            res = q - 1;
+            t = abs(b1 - d1) - 1;
+            if ( t >= 0 )
+                res = res + t * 2 + 1;
+        }
+    } 
+    cout << res << endl;
+    return 0;
+}
