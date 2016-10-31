@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-#define DEBUG 1
+//#define DEBUG 1
 using namespace std;
 vector<int> ind;
 vector<char> opr;
@@ -11,32 +11,34 @@ bool search(int t, int offset)
     bool result = false;
 #ifdef DEBUG
     cout << "Offset: " << offset << endl;
-    vector<int>::iterator tk = current_queue.begin() + offset;
-    cout << "assertion: " << (tk == current_queue.begin() ) << endl;
+    cout << "Target: " << t << endl;
 #endif
     for( vector<int>::iterator it = current_queue.begin() + offset; it < current_queue.end();)
     {
+#ifdef DEBUG
+        cout << "Current weight: " << *it << endl;
+#endif
         if ( *it == t)
         {
             result = true;
             return result;
         }
-#ifdef DEBUG
-        cout << "assertion (it eql begin): " << (it == current_queue.begin() ) << endl;
-#endif
         if ( it == current_queue.begin() )
         {
             //Only right is allowed.
             if ( ( *it > *(it+1) ) && ( (it + 1) < current_queue.end() ) )//the left side is huge
             {
+#ifdef DEBUG
                 cout << "Step in beginning" << endl;
-                int tmp = *it;
+#endif
+                int tmp = *(it+1);
+                int log_i = 1 + it - current_queue.begin();
                 ind.push_back(1 + it - current_queue.begin() );
                 current_queue.erase(it+1); //eat
                 *it = *it + tmp; //get fat
                 opr.push_back('R');
 #ifdef DEBUG
-                cout << "Monster " << 1 + it - current_queue.begin() << " Eats Right Side" << endl;
+                cout << "Monster " << log_i << " Eats Right Side" << endl;
                 cout << "Current ind: " << it - current_queue.begin() << " Total Length " << current_queue.size() << endl;
 #endif
             }
@@ -53,12 +55,13 @@ bool search(int t, int offset)
                 if ( ( *it > *(it-1) ) && ( (it-1) >= current_queue.begin() ) ) //eat left side
                 {
                     int tmp = *(it-1);
+                    int log_i = 1 + it - current_queue.begin();
                     ind.push_back(1 + it - current_queue.begin() );
                     it = current_queue.erase(it-1);
                     *it = *it + tmp;
                     opr.push_back('L');
 #ifdef DEBUG
-                    cout << "Monster " << 1 + it - current_queue.begin() << " Eats Left Side" << endl;
+                    cout << "Monster " << log_i << " Eats Left Side" << endl;
                     cout << "Current ind: " << it - current_queue.begin() << " Total Length " << current_queue.size() << endl;
 #endif
                 }
@@ -75,12 +78,13 @@ bool search(int t, int offset)
                 if ( ( *it > *(it - 1 )  ) && ( (it - 1) >= current_queue.begin() ) ) //left side
                 {
                     int tmp = *(it-1);
+                    int log_i = 1 + it - current_queue.begin();
                     ind.push_back(1 + it - current_queue.begin());
                     it = current_queue.erase(it-1);
                     *it = *it + tmp;
                     opr.push_back('L');
 #ifdef DEBUG
-                    cout << "Monster " << 1 + it - current_queue.begin() << " Eats Left Side" << endl;
+                    cout << "Monster " << log_i << " Eats Left Side" << endl;
                     cout << "Current ind: " << it - current_queue.begin() << " Total Length " << current_queue.size() << endl;
 #endif
                 }
@@ -89,12 +93,13 @@ bool search(int t, int offset)
                     if ( ( *it > *(it + 1 ) ) && ((it + 1) < current_queue.end())  )//right side
                     {
                         int tmp = *(it+1);
+                        int log_i = 1 + it - current_queue.begin();
                         ind.push_back(1 + it - current_queue.begin());
                         current_queue.erase(it+1);
                         *it = *it + tmp;
                         opr.push_back('R');
 #ifdef DEBUG
-                        cout << "Monster " << 1 + it - current_queue.begin() << " Eats Right Side" << endl;
+                        cout << "Monster " << log_i << " Eats Right Side" << endl;
                         cout << "Current ind: " << it - current_queue.begin() << " Total Length " << current_queue.size() << endl;
 #endif
                     }
